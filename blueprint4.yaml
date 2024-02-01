@@ -40,12 +40,12 @@ trigger:
     id: door
     entity_id: !input door_sensors
   - platform: event
-    id: timer_finished
+    id: timerfinished
     event_type: timer.finished
     event_data:
       entity_id: !input timer
   - platform: event
-    id: timer_started
+    id: timerstarted
     event_type: timer.started
     event_data:
       entity_id: !input timer
@@ -65,14 +65,14 @@ action:
             entity_id: !input timer
     - conditions:
         - condition: trigger
-          id: timer_finished
+          id: timerfinished
       sequence:
         - service: timer.turn_off
           target:
             entity_id: !input timer
     - conditions:
         - condition: trigger
-          id: timer_started
+          id: timerstarted
       sequence:
         - service: light.turn_on
           target:
