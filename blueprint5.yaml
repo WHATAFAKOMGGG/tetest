@@ -67,9 +67,9 @@ action:
         - condition: trigger
           id: timerfinished
       sequence:
-        - service: timer.turn_off
+        - service: light.turn_off
           target:
-            entity_id: !input timer
+            entity_id: !input lights
     - conditions:
         - condition: trigger
           id: timerstarted
