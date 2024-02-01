@@ -1,0 +1,81 @@
+blueprint:
+  name: Auto Light 3
+  description: Turn a light on based on detected motion or a door opening.
+  domain: automation
+  input:
+    motion_sensors:
+      name: Motion Sensors
+      description: List of motion sensors to use
+      selector:
+        entity:
+          multiple: true
+          domain: binary_sensor
+          device_class: motion
+    timer:
+      name: Timer
+      description: Timer object to use
+      selector:
+        entity:
+          domain: timer
+    door_sensors:
+      name: Door Sensors
+      description: List of door sensors to use
+      selector:
+        entity:
+          multiple: true
+          domain: binary_sensor
+          device_class: door
+    lights:
+      name: Lights
+      description: List of lights to turn on
+      selector:
+        entity:
+          multiple: true
+          domain: light
+trigger:
+  - platform: state
+    id: motion
+    entity_id: !input motion_sensors
+  - platform: state
+    id: door
+    entity_id: !input door_sensors
+  - platform: event
+    id: timer_finished
+    event_type: timer.finished
+    event_data:
+      entity_id: !input timer
+  - platform: event
+    id: timer_started
+    event_type: timer.started
+    event_data:
+      entity_id: !input timer
+action:
+  choose:
+    - conditions:
+        - condition: trigger
+          id:
+            - "motion"
+      sequence:
+        - service: timer.start
+          target: !input timer
+          data:
+            duration: 00:05:00
+      - conditions:
+          - condition: trigger
+            id:
+              - "door"
+      sequence:
+        - service: timer.start
+          target: !input timer
+          data:
+            duration: 00:05:00
+      - conditions:
+          - condition: trigger
+            id:
+              - "timer_finished"
+      sequence:
+        - service: light.turn_off
+          target: !input lights
+    default:
+      - service: light.turn_on
+        target: !input lights
