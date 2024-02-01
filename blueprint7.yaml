@@ -75,7 +75,7 @@ action:
                   entity_id: !input timer
             until:
               - condition: template
-                entity_id: "{{ is_state(trigger.entity_id, 'off') }}"
+                value_template: "{{ is_state(trigger.entity_id, 'off') }}"
     - conditions:
         - condition: trigger
           id: timerfinished
