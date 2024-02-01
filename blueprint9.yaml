@@ -49,33 +49,28 @@ trigger:
     event_type: timer.started
     event_data:
       entity_id: !input timer
+      
 action:
   choose:
     - conditions:
         - condition: trigger
           id:
-            - "motion"
+            - motion
+            - door
       sequence:
         - service: timer.start
-          target: !input timer
           data:
-            duration: 00:05:00
-      - conditions:
-          - condition: trigger
-            id:
-              - "door"
-      sequence:
-        - service: timer.start
+            duration: "00:05:00"
           target: !input timer
-          data:
-            duration: 00:05:00
-      - conditions:
-          - condition: trigger
-            id:
-              - "timer_finished"
+    - conditions:
+        - condition: trigger
+          id: timer_finished
       sequence:
-        - service: light.turn_off
+        - service: timer.turn_off
           target: !input lights
-    default:
-      - service: light.turn_on
-        target: !input lights
+      default:
+        - service: light.turn_on
+          target: lights
+  default:
+    - service: light.turn_on
+      target: !input lights
