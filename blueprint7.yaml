@@ -27,9 +27,9 @@ blueprint:
           multiple: true
           domain: light
 trigger:
-  - platform: device
+  - platform: state
     entity_id: !input motion_sensors
-  - platform: device
+  - platform: state
     entity_id: !input door_sensors
 action:
   service: light.turn_on
