@@ -32,6 +32,12 @@ blueprint:
         entity:
           multiple: true
           domain: light
+    time:
+      name: Time
+      description: Time to turn off the light
+      default: "00:00:30"
+      selector:
+        time: {}
 trigger:
   - platform: state
     id: motion
@@ -58,11 +64,6 @@ action:
             - motion
             - door
       sequence:
-        - service: timer.start
-          data:
-            duration: "00:05:00"
-          target:
-            entity_id: !input timer
         - service: light.turn_on
           target:
             entity_id: !input lights
@@ -70,7 +71,7 @@ action:
             sequence:
               - service: timer.start
                 data:
-                  duration: "00:05:00"
+                  duration: !input time
                 target:
                   entity_id: !input timer
             until:
