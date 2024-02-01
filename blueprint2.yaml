@@ -1,84 +1,34 @@
-# Name and description of your blueprint
 blueprint:
-  name: Auto Lights Corridor 2
-  description: Automatically controls lights in Corridor 2 based on motion and door sensors.
+  name: Auto Light
+  description: Turn a light on based on detected motion or a door opening.
   domain: automation
-
-input:
-  # Define inputs for user customization
-  trigger_entities:
-    name: Trigger Entities
-    description: Comma-separated list of sensor IDs that trigger the automation.
-    default: binary_sensor.garagetohome_door_contact, binary_sensor.corridor2_movment_occupancy
-  motion_sensor_entities:
-    name: Motion Sensor Entities (Optional)
-    description: (Optional) List of additional motion sensor IDs (if different from triggers).
-    default: ""
-  light_entity_id:
-    name: Light Entity ID
-    description: The entity ID of the light controlled by the automation.
-    default: light.corridor2_lights
-
-# Define the schema for inputs
-schema:
-  trigger_entities:
-    description: Comma-separated list of entity IDs that trigger the automation when opened/closed or motion detected.
-    type: list
-    min_items: 1
-    items:
-      type: string
-  motion_sensor_entities:
-    description: (Optional) Comma-separated list of additional motion sensor entity IDs (if different from triggers).
-    type: list
-    min_items: 0
-    items:
-      type: string
-  light_entity_id:
-    description: The entity ID of the light controlled by the automation.
-    type: string
-
-# Specify the trigger(s)
-trigger:
-  - platform: state
-    entity_id: "{{ input('trigger_entities') }}"
-    to: "on"
-
-# Define the condition(s)
-condition:
-  - condition: state
-    entity_id: input_boolean.corridor_2_lights_manual
-    state: "off"
-
-# Actions to be performed
+  input:
+    motion_sensors:
+      name: Motion Sensors
+      description: List of motion sensors to use
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: motion
+    door_sensors:
+      name: Door Sensors
+      description: List of door sensors to use
+      selector:
+        entity:
+          domain: binary_sensor
+          device_class: door
+    lights:
+      name: Lights
+      description: List of lights to turn on
+      selector:
+        entity:
+          domain: light
+triger:
+  platform: state
+  entity_id: !input motion_sensors
+  to: 'on'
+  
 action:
-  - repeat:
-      sequence:
-        - service: timer.start
-          data:
-            duration: "0:01:00"
-            target:
-              entity_id: timer.auto_lights_corridor_2
-        - delay:
-            seconds: 2
-      while:
-        - condition: or
-          conditions:
-            - condition: state
-              entity_id: "{{ input('motion_sensor_entities') }}"
-              state: "on"
-  - choose:
-      - conditions:
-          - condition: trigger
-            id: timer.finished
-            entity_id: timer.auto_lights_corridor_2
-        sequence:
-          - service: light.turn_off
-            target:
-              entity_id: "{{ input('light_entity_id') }}"
-      - conditions:
-          - condition: trigger
-            id: input_boolean.corridor_2_lights_manual
-        sequence:
-          - service: light.toggle
-            target:
-              entity_id: "{{ input('light_entity_id') }}"
+  service: light.turn_on
+  target:
+    entity_id: !input lights
