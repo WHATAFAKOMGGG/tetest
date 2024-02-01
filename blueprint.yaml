@@ -39,7 +39,7 @@ schema:
 # Specify the trigger(s)
 trigger:
   - platform: state
-    entity_id: '{{ input('trigger_entities') }}'
+    entity_id: "{{ input('trigger_entities') }}"
     to: "on"
 
 # Define the condition(s)
@@ -63,7 +63,7 @@ action:
         - condition: or
           conditions:
             - condition: state
-              entity_id: '{{ input('motion_sensor_entities') }}'
+              entity_id: "{{ input('motion_sensor_entities') }}"
               state: "on"
   - choose:
       - conditions:
@@ -73,11 +73,11 @@ action:
         sequence:
           - service: light.turn_off
             target:
-              entity_id: '{{ input('light_entity_id') }}'
+              entity_id: "{{ input('light_entity_id') }}"
       - conditions:
           - condition: trigger
             id: input_boolean.corridor_2_lights_manual
         sequence:
           - service: light.toggle
             target:
-              entity_id: '{{ input('light_entity_id') }}'
+              entity_id: "{{ input('light_entity_id') }}"
