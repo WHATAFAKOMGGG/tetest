@@ -38,6 +38,19 @@ blueprint:
       default: "00:00:30"
       selector:
         time: {}
+    buttons:
+      name: Buttons
+      description: List of buttons to use
+      selector:
+        entity:
+          multiple: true
+          domain: sensor
+    button_hold_time:
+      name: Button Time
+      description: Time to turn off the light when button is single pressed
+      default: "00:00:01"
+      selector:
+        time: {}
 trigger:
   - platform: state
     id: motion
@@ -45,6 +58,10 @@ trigger:
   - platform: state
     id: door
     entity_id: !input door_sensors
+  - platform: state
+    id: button
+    entity_id: !input buttons
+    to: "single"
   - platform: event
     id: timerfinished
     event_type: timer.finished
@@ -84,3 +101,15 @@ action:
         - service: light.turn_off
           target:
             entity_id: !input lights
+    - conditions:
+        - condition: trigger
+          id: button
+      sequence:
+        - service: light.turn_on
+          target:
+            entity_id: !input lights
+        - service: timer.start
+          data:
+            duration: !input button_hold_time
+          target:
+            entity_id: !input timer
