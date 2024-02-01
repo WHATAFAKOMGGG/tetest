@@ -2,6 +2,7 @@
 blueprint:
   name: Auto Lights Corridor 2
   description: Automatically controls lights in Corridor 2 based on motion and door sensors.
+  domain: automation
 
 input:
   # Define inputs for user customization
