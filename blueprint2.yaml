@@ -8,6 +8,7 @@ blueprint:
       description: List of motion sensors to use
       selector:
         entity:
+          multiple: true
           domain: binary_sensor
           device_class: motion
     door_sensors:
@@ -15,6 +16,7 @@ blueprint:
       description: List of door sensors to use
       selector:
         entity:
+          multiple: true
           domain: binary_sensor
           device_class: door
     lights:
@@ -22,6 +24,7 @@ blueprint:
       description: List of lights to turn on
       selector:
         entity:
+          multiple: true
           domain: light
 triger:
   platform: state
