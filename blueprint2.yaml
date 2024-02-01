@@ -70,10 +70,6 @@ action:
         - service: timer.turn_off
           target:
             entity_id: !input timer
-      default:
-        - service: light.turn_on
-          target: 
-            entity_id: !input lights
   default:
     - service: light.turn_on
       target:
