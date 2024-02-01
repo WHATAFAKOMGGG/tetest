@@ -1,5 +1,5 @@
 blueprint:
-  name: Auto Light
+  name: Auto Light 3
   description: Turn a light on based on detected motion or a door opening.
   domain: automation
   input:
@@ -28,7 +28,9 @@ blueprint:
           domain: light
 trigger:
   platform: state
-  entity_id: !input motion_sensors
+  entity_id:
+    - !input motion_sensors
+    - !input door_sensors
   to: 'on'
   
 action:
