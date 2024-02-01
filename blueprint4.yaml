@@ -26,7 +26,7 @@ blueprint:
         entity:
           multiple: true
           domain: light
-triger:
+trigger:
   platform: state
   entity_id: !input motion_sensors
   to: 'on'
